@@ -1,5 +1,6 @@
 package com.bdd.workshop.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -30,6 +31,10 @@ class MainActivity : AppCompatActivity() {
     recyclerView.adapter = taskAdapter
     recyclerView.layoutManager = LinearLayoutManager(this)
     taskAdapter.tasks = taskManager.getAllTasks()
+
+    fab.setOnClickListener {
+      startActivity(Intent(this, AddTaskActivity::class.java))
+    }
   }
 }
 
