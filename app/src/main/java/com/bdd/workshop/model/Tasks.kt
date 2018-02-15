@@ -1,21 +1,25 @@
 package com.bdd.workshop.model
 
 data class Task(
-    val id: Long,
     var title: String,
-    var description: String)
+    var description: String
+)
 
 
-open class TaskManager {
+open class TaskManager(
+    tasks: List<Task> = emptyList()
+) {
 
-  private val items: List<Task> = ArrayList()
+  private val items: MutableList<Task> = ArrayList(tasks)
+  var taskObserver: (() -> Unit)? = null
 
   open fun getAllTasks(): List<Task> {
-      return items
+    return items
   }
 
   open fun saveTask(title: String, description: String) {
-    // TODO
+    items.add(Task(title, description))
+    taskObserver?.invoke()
   }
 
 }

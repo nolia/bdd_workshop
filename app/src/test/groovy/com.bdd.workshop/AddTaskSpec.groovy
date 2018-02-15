@@ -12,7 +12,9 @@ import org.robolectric.Shadows
 
 class AddTaskSpec extends ElectricSpecification {
 
-  private TaskManager mockTaskManager = Mock()
+  private TaskManager mockTaskManager = Mock() {
+    getAllTasks() >> []
+  }
 
   void setup() {
     def app = RuntimeEnvironment.application as App

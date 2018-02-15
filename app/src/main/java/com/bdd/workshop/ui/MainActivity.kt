@@ -30,11 +30,16 @@ class MainActivity : AppCompatActivity() {
     val taskAdapter = TaskAdapter(LayoutInflater.from(this))
     recyclerView.adapter = taskAdapter
     recyclerView.layoutManager = LinearLayoutManager(this)
-    taskAdapter.tasks = taskManager.getAllTasks()
+    taskManager.taskObserver = { updateTasks(taskAdapter) }
+    updateTasks(taskAdapter)
 
     fab.setOnClickListener {
       startActivity(Intent(this, AddTaskActivity::class.java))
     }
+  }
+
+  private fun updateTasks(taskAdapter: TaskAdapter) {
+    taskAdapter.tasks = taskManager.getAllTasks()
   }
 }
 
