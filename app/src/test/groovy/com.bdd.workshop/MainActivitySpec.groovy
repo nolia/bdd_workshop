@@ -17,17 +17,19 @@ class MainActivitySpec extends ElectricSpecification {
   private MainActivity mainActivity
 
   private TaskManager mockTaskManager = Mock()
+  private app
 
   void setup() {
     controller = Robolectric.buildActivity(MainActivity)
     mainActivity = controller.get()
 
-    def app = RuntimeEnvironment.application as App
-    app.taskManager = mockTaskManager
+    app = RuntimeEnvironment.application as App
+
   }
 
   def "should see tasks on task list"() {
     given: "I have a bunch of tasks"
+    app.taskManager = mockTaskManager
     def task = new Task("first", "task")
 
     when: "I open task list screen"
@@ -40,14 +42,35 @@ class MainActivitySpec extends ElectricSpecification {
     recycler.visibility == View.VISIBLE
     recycler.childCount == 1
 
-    shouldMatchViewAndTask(recycler.getChildAt(0), task)
+    shouldMatchViewAndTask(recycler.getChildAt(0), task.title, task.description)
   }
 
-  private def shouldMatchViewAndTask(View view, Task task) {
+  def "should update UI when task list is updated"() {
+    given: "I have a task list"
+    app.taskManager.saveTask("task1", "hello")
+
+    when: "I open task list scree"
+    controller.create().visible()
+
+    and: "Add a new task"
+    app.taskManager.saveTask("task2", "world")
+
+    then: "I should see it on UI"
+    def recycler = mainActivity.findViewById(R.id.recyclerView) as RecyclerView
+    recycler.visibility == View.VISIBLE
+    recycler.childCount == 2
+
+    shouldMatchViewAndTask(recycler.getChildAt(0), "task1", "hello")
+    shouldMatchViewAndTask(recycler.getChildAt(1), "task2", "world")
+
+  }
+
+
+  private def shouldMatchViewAndTask(View view, String title, String description) {
     def titleView = view.findViewById(R.id.title) as TextView
     def descriptionView = view.findViewById(R.id.description) as TextView
 
-    return task.title == titleView.getText().toString() &&
-           task.description == descriptionView.getText().toString()
+    return title == titleView.getText().toString() &&
+           description == descriptionView.getText().toString()
   }
 }

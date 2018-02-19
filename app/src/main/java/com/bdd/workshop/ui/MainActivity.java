@@ -24,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
   private TaskManager taskManager;
   private RecyclerView recyclerView;
 
+  private TaskManager.Listener listener = this::resetTasks;
+  private TaskAdapter taskAdapter;
+
   @Override
   protected void onCreate(@Nullable final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -34,12 +37,24 @@ public class MainActivity extends AppCompatActivity {
     setSupportActionBar(findViewById(R.id.toolbar));
 
     recyclerView = findViewById(R.id.recyclerView);
-    final TaskAdapter taskAdapter = new TaskAdapter(LayoutInflater.from(this));
+    taskAdapter = new TaskAdapter(LayoutInflater.from(this));
     recyclerView.setAdapter(taskAdapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    taskAdapter.setTasks(taskManager.getAllTasks());
+    resetTasks();
+
+    taskManager.addListener(listener);
 
     findViewById(R.id.fab).setOnClickListener(v ->  onOpenAddTaskScreen() );
+  }
+
+  @Override
+  protected void onDestroy() {
+    taskManager.removeListener(listener);
+    super.onDestroy();
+  }
+
+  private void resetTasks() {
+    taskAdapter.setTasks(taskManager.getAllTasks());
   }
 
   private void onOpenAddTaskScreen() {
