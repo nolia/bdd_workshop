@@ -28,7 +28,7 @@ class MainActivitySpec extends ElectricSpecification {
 
   def "should see tasks on task list"() {
     given: "I have a bunch of tasks"
-    def task = new Task(1, "first", "task")
+    def task = new Task("first", "task")
 
     when: "I open task list screen"
     controller.create().visible()
