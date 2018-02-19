@@ -7,8 +7,9 @@ then: "I should see these tasks"
 
 ### As a user I should be able to add a task.
 - open Add Task form/screen
-- validate task before saving
 - save task from Add Task form/screen
+- validate task before saving
+- task list should be updated after new task is saved
 
 ### As a user I should be able to delete a task.
 
