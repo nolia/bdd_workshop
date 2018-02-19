@@ -1,5 +1,6 @@
 package com.bdd.workshop.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +22,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
   private TaskManager taskManager;
-
   private RecyclerView recyclerView;
 
   @Override
@@ -38,6 +38,13 @@ public class MainActivity extends AppCompatActivity {
     recyclerView.setAdapter(taskAdapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
     taskAdapter.setTasks(taskManager.getAllTasks());
+
+    findViewById(R.id.fab).setOnClickListener(v ->  onOpenAddTaskScreen() );
+  }
+
+  private void onOpenAddTaskScreen() {
+    final Intent intent = new Intent(this, AddTaskActivity.class);
+    startActivity(intent);
   }
 
 
